@@ -36,7 +36,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
  * @author Nijikokun
  */
 public class Players implements Listener {
-    private Template Template = null;
+    private Template Template;
 
     Logger log = iConomy.instance.getLogger();
 
@@ -272,8 +272,8 @@ public class Players implements Listener {
 
             Bank.setMinor(line[0], line[1]);
         } else if (key.equals("fee")) {
-            Double fee = Double.valueOf(value.toString());
-            Bank.setFee(fee.doubleValue());
+            double fee = Double.parseDouble(value.toString());
+            Bank.setFee(fee);
         } else if (key.equals("name")) {
             Bank.setName(value.toString());
         }
@@ -303,26 +303,24 @@ public class Players implements Listener {
             return;
         }
 
-        if (bank != null) {
-            double fee = bank.getFee();
-            if (fee > account.getHoldings().balance()) {
-                Messaging.send(sender, this.Template.color("error.bank.account.funds"));
-                return;
-            }
-
-            if (bank.createAccount(player)) {
-                account.getHoldings().subtract(fee);
-
-                Messaging.send(sender, this.Template.color("tag.bank") + this.Template.parse("accounts.bank.create", new String[] { "+bank,+b", "+name,+n" }, new String[] { name, player }));
-
-                if (count == 0) {
-                    iConomy.getAccount(player).setMainBank(bank.getId());
-                }
-
-                return;
-            }
-            Messaging.send(sender, this.Template.color("error.bank.account.failed"));
+        double fee = bank.getFee();
+        if (fee > account.getHoldings().balance()) {
+            Messaging.send(sender, this.Template.color("error.bank.account.funds"));
+            return;
         }
+
+        if (bank.createAccount(player)) {
+            account.getHoldings().subtract(fee);
+
+            Messaging.send(sender, this.Template.color("tag.bank") + this.Template.parse("accounts.bank.create", new String[] { "+bank,+b", "+name,+n" }, new String[] { name, player }));
+
+            if (count == 0) {
+                iConomy.getAccount(player).setMainBank(bank.getId());
+            }
+
+            return;
+        }
+        Messaging.send(sender, this.Template.color("error.bank.account.failed"));
 
     }
 
@@ -361,7 +359,6 @@ public class Players implements Listener {
      * Show list of banks
      *
      * @param sender
-     * @param name
      */
     public void showBankList(CommandSender sender, int current) {
         Connection conn = null;
@@ -937,7 +934,7 @@ public class Players implements Listener {
 
         if (account != null) {
             int rank = account.getRank();
-            boolean isSelf = ((Player) viewing).getName().equalsIgnoreCase(player);
+            boolean isSelf = viewing.getName().equalsIgnoreCase(player);
 
             Messaging.send(viewing, this.Template.color("tag.money") + this.Template.parse(isSelf ? "personal.rank" : "player.rank", new Object[] { "+name,+n", "+rank,+r" }, new Object[] { player, Integer.valueOf(rank) }));
         } else {
@@ -968,7 +965,8 @@ public class Players implements Listener {
 
         for (String account : Ranking.keySet()) {
             Double balance = Ranking.get(account);
-
+            if (account.startsWith("towny-") || account.startsWith("town-")
+                    || account.startsWith("nation-") || account.startsWith("[DEBT]")) continue;
             Messaging.send(viewing, this.Template.parse("top.line", new String[] { "+i,+number", "+player,+name,+n", "+balance,+b" }, new Object[] { Integer.valueOf(count), account, iConomy.format(balance.doubleValue()) }));
 
             count++;
@@ -980,7 +978,6 @@ public class Players implements Listener {
      *
      * @param player The player who sent the command.
      * @param split The input line split by spaces.
-     * @return <code>boolean</code> - True denotes that the command existed, false the command doesn't.
      */
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -1084,7 +1081,7 @@ public class Players implements Listener {
                         }
 
                         Player check = Misc.playerMatch(split[2]);
-                        String name = "";
+                        String name;
 
                         if (check != null)
                             name = check.getName();
@@ -1092,7 +1089,7 @@ public class Players implements Listener {
                             name = split[2];
                         }
 
-                        if (name == null ? "" != null : !name.equals("")) {
+                        if (name == null || !name.equals("")) {
                             Account account = iConomy.getAccount(name);
 
                             if (account != null) {

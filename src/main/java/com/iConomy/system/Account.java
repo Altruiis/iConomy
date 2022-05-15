@@ -379,7 +379,6 @@ public class Account {
     /**
      * Returns the ranking number of an account
      *
-     * @param name
      * @return Integer
      */
     public int getRank() {
@@ -394,6 +393,7 @@ public class Account {
             rs = ps.executeQuery();
 
             while (rs.next()) {
+                if (rs.getString("username").contains("-")) continue;
                 if (rs.getString("username").equalsIgnoreCase(this.name)) {
                     return i;
                 }
