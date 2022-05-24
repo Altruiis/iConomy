@@ -4,7 +4,7 @@ version: ${project.version}
 api-version: ${project.bukkitAPIVersion}
 authors: [Nijikokun, ElgarL, LlmDl, graywolf336]
 softdepend: [Vault]
-load: startup
+load: STARTUP
 
 libraries:
     - com.h2database:h2:1.3.159
@@ -23,7 +23,7 @@ commands:
         
 permissions:
     iConomy.admin:
-        default: false
+        default: op
         children:
             iConomy.admin.account.create: true
             iConomy.admin.account.remove: true
@@ -67,20 +67,3 @@ permissions:
         default: true
     iConomy.rank:
         default: true
-    
-#    iConomy.bank.list:
-#    iConomy.bank.main:
-#    iConomy.bank.access:
-#    iConomy.bank.list:
-#    iConomy.bank.main.view:
-#    iConomy.bank.join:
-#    iConomy.bank.leave:
-#    iConomy.bank.deposit:
-#    iConomy.bank.withdraw:
-#    iConomy.bank.transfer:
-#    iConomy.bank.main.change:
-#    iConomy.bank.admin.set:
-#    iConomy.bank.transfer.multiple:
-    
-    
-    
