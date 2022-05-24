@@ -3,6 +3,7 @@ package com.iConomy.system;
 import com.iConomy.events.AccountRemoveEvent;
 import com.iConomy.iConomy;
 import com.iConomy.util.Constants;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class Account {
-    private String name;
+    private final String name;
 
     public Account(String name) {
         this.name = name;
@@ -21,7 +22,7 @@ public class Account {
 
     /**
      * Get the id of this Account.
-     * 
+     *
      * @return id
      */
     public int getId() {
@@ -37,24 +38,32 @@ public class Account {
 
             if (rs.next())
                 id = rs.getInt("id");
-        } catch (Exception ex) {
-            id = -1;
+        } catch (Exception ignored) {
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
-            
+                try {
+                    ps.close();
+                } catch (SQLException ignored) {
+                }
+
             if (rs != null)
-                try { rs.close(); } catch (SQLException ex) {}
-            
+                try {
+                    rs.close();
+                } catch (SQLException ignored) {
+                }
+
             if (conn != null)
-                try { conn.close();  } catch (SQLException ex) {}
+                try {
+                    conn.close();
+                } catch (SQLException ignored) {
+                }
         }
         return id;
     }
 
     /**
      * Get this Account name.
-     * 
+     *
      * @return the name of this Account.
      */
     public String getName() {
@@ -62,8 +71,8 @@ public class Account {
     }
 
     /**
-     * Get teh Holdings of this Account.
-     * @return
+     * Get the Holdings of this Account.
+     *
      */
     public Holdings getHoldings() {
         return new Holdings(0, this.name);
@@ -85,11 +94,13 @@ public class Account {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
         return true;
     }
@@ -112,11 +123,13 @@ public class Account {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
         return true;
     }
@@ -126,9 +139,9 @@ public class Account {
             return null;
         }
         Connection conn = null;
-        ResultSet rs = null;
+        ResultSet rs;
         PreparedStatement ps = null;
-        ArrayList<Bank> banks = new ArrayList<Bank>();
+        ArrayList<Bank> banks = new ArrayList<>();
         try {
             conn = iConomy.getiCoDatabase().getConnection();
 
@@ -146,11 +159,13 @@ public class Account {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
         return banks;
     }
@@ -178,7 +193,7 @@ public class Account {
             ps = conn.prepareStatement("UPDATE " + Constants.SQLTable + "_BankRelations SET main = 0 WHERE account_name = ? AND main = 1");
             ps.setString(1, this.name);
             ps.executeUpdate();
-            
+
             ps.close();
 
             ps = conn.prepareStatement("UPDATE " + Constants.SQLTable + "_BankRelations SET main = 1 WHERE account_name = ? AND bank_id = ?");
@@ -191,11 +206,13 @@ public class Account {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
     }
 
@@ -223,11 +240,13 @@ public class Account {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
         return bank;
     }
@@ -257,11 +276,13 @@ public class Account {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
         return account;
     }
@@ -291,11 +312,13 @@ public class Account {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
         return banks;
     }
@@ -312,7 +335,7 @@ public class Account {
 
     /**
      * Get the Hidden state of this Account.
-     * 
+     *
      * @return true if hidden.
      */
     public boolean isHidden() {
@@ -333,11 +356,17 @@ public class Account {
             log.warning("Failed to check status: " + ex);
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
-            
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                }
+
             if (rs != null)
-                try { rs.close(); } catch (SQLException ex) {}
-            
+                try {
+                    rs.close();
+                } catch (SQLException ex) {
+                }
+
             if (conn != null) {
                 iConomy.getiCoDatabase().close(conn);
             }
@@ -347,8 +376,8 @@ public class Account {
 
     /**
      * Set the Hidden flag on this account.
-     * 
-     * @param hidden	the hidden state to set.
+     *
+     * @param hidden the hidden state to set.
      * @return true if successful
      */
     public boolean setHidden(boolean hidden) {
@@ -367,8 +396,11 @@ public class Account {
             return false;
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
-            
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                }
+
             if (conn != null) {
                 iConomy.getiCoDatabase().close(conn);
             }
@@ -399,15 +431,18 @@ public class Account {
                 }
                 i++;
             }
-        } catch (Exception ex) {} finally {
+        } catch (Exception ex) {
+        } finally {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             iConomy.getiCoDatabase().close(conn);
         }
 
@@ -418,7 +453,7 @@ public class Account {
      * Remove this account.
      */
     public void remove() {
-    	
+
         AccountRemoveEvent event = new AccountRemoveEvent(this.name);
         event.schedule(event);
     }

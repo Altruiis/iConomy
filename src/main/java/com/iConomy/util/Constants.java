@@ -1,32 +1,30 @@
 package com.iConomy.util;
 
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 public class Constants {
     public static final String Codename = "Towny Edition";
-    public static File Configuration;
     public static String Plugin_Directory;
     public static String H2_Jar_Location = "http://palmergames.com/file-repo/iConomy/libs/h2.jar";
     public static String MySQL_Jar_Location = "http://palmergames.com/file-repo/iConomy/libs/mysql-connector-java-bin.jar";
 
     // iConomy basics
-    public static List<String> Major = new LinkedList<String>();
-    public static List<String> Minor = new LinkedList<String>();
+    public static List<String> Major = new LinkedList<>();
+    public static List<String> Minor = new LinkedList<>();
     public static double Holdings = 30.0D;
     
     // iConomy Bank
     public static boolean Banking = false;
     public static boolean BankingMultiple = true;
     public static String BankName = "iConomy";
-    public static List<String> BankMajor = new LinkedList<String>();
-    public static List<String> BankMinor = new LinkedList<String>();
+    public static List<String> BankMajor = new LinkedList<>();
+    public static List<String> BankMinor = new LinkedList<>();
     public static double BankHoldings = 30.0D;
     public static double BankFee = 20.0D;
 
@@ -118,16 +116,12 @@ public class Constants {
             SQLPassword = config.getString("System.Database.Settings.MySQL.Password", SQLPassword);
             SQLFlags = config.getString("System.Database.Settings.MySQL.Flags", SQLFlags);
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidConfigurationException e) {
+        } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }
     
-    private static String[] h2Types = new String[] { "sqlite", "h2", "h2sql", "h2db" };
+    private static final String[] h2Types = new String[] { "sqlite", "h2", "h2sql", "h2db" };
     
     public static boolean isDatabaseTypeH2() {
         return Misc.is(Constants.DatabaseType, h2Types);

@@ -9,6 +9,14 @@ import com.iConomy.util.Constants;
 import com.iConomy.util.Messaging;
 import com.iConomy.util.Misc;
 import com.iConomy.util.Template;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,14 +28,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
  * Handles the command usage and account creation upon a
@@ -678,7 +678,7 @@ public class Players implements Listener {
             }
 
             if (!from.equalsIgnoreCase(to)) {
-                Player playerTo = iConomy.getBukkitServer().getPlayer(to);
+                Player playerTo = Bukkit.getServer().getPlayer(to);
 
                 if (playerTo != null) {
                     Messaging.send(sender, this.Template.color("tag.bank") + this.Template.parse("personal.bank.recieved", new String[]{"+bank,+b", "+amount,+a"}, new String[]{to_bank_name, iConomy.format(amount)}));
@@ -743,7 +743,7 @@ public class Players implements Listener {
             }
 
             if (!from.equalsIgnoreCase(to)) {
-                Player playerTo = iConomy.getBukkitServer().getPlayer(to);
+                Player playerTo = Bukkit.getServer().getPlayer(to);
 
                 if (playerTo != null) {
                     Messaging.send(sender, this.Template.color("tag.bank") + this.Template.parse("personal.bank.recieved", new String[]{"+bank,+b", "+amount,+a"}, new String[]{to_bank_name, iConomy.format(amount)}));
@@ -755,8 +755,8 @@ public class Players implements Listener {
     }
 
     public void showPayment(String from, String to, double amount) {
-        Player paymentFrom = iConomy.getBukkitServer().getPlayer(from);
-        Player paymentTo = iConomy.getBukkitServer().getPlayer(to);
+        Player paymentFrom = Bukkit.getServer().getPlayer(from);
+        Player paymentTo = Bukkit.getServer().getPlayer(to);
 
         if (paymentFrom != null) {
             from = paymentFrom.getName();
@@ -807,7 +807,7 @@ public class Players implements Listener {
      * @param console    Is it sent via console?
      */
     public void showReset(CommandSender sender, String account, Player controller, boolean console) {
-        Player player = iConomy.getBukkitServer().getPlayer(account);
+        Player player = Bukkit.getServer().getPlayer(account);
 
         if (player != null) {
             account = player.getName();
@@ -834,7 +834,7 @@ public class Players implements Listener {
     }
 
     public void showGrant(CommandSender sender, String name, Player controller, double amount, boolean console) {
-        Player online = iConomy.getBukkitServer().getPlayer(name);
+        Player online = Bukkit.getServer().getPlayer(name);
 
         if (online != null) {
             name = online.getName();
@@ -872,7 +872,7 @@ public class Players implements Listener {
     }
 
     public void showSet(CommandSender sender, String name, Player controller, double amount, boolean console) {
-        Player online = iConomy.getBukkitServer().getPlayer(name);
+        Player online = Bukkit.getServer().getPlayer(name);
 
         if (online != null) {
             name = online.getName();
@@ -967,7 +967,7 @@ public class Players implements Listener {
     public boolean onPlayerCommand(CommandSender sender, String[] split) {
 
         boolean isPlayer = sender instanceof Player;
-        Player player = sender instanceof Player ? (Player) sender : null;
+        Player player = isPlayer ? (Player) sender : null;
 
         if (split[0].equalsIgnoreCase("bank")) {
             switch (split.length) {
@@ -1023,7 +1023,7 @@ public class Players implements Listener {
                         return true;
                     }
 
-                    Player online = iConomy.getBukkitServer().getPlayer(split[1]);
+                    Player online = Bukkit.getServer().getPlayer(split[1]);
 
                     if (online != null) {
                         split[1] = online.getName();
@@ -1449,7 +1449,7 @@ public class Players implements Listener {
                         return false;
                     }
 
-                    Player online = iConomy.getBukkitServer().getPlayer(split[1]);
+                    Player online = Bukkit.getServer().getPlayer(split[1]);
 
                     if (online != null) {
                         split[1] = online.getName();

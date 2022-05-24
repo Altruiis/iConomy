@@ -1,20 +1,17 @@
 package com.iConomy.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.OfflinePlayer;
-
 import com.iConomy.iConomy;
 import com.iConomy.system.Holdings;
-
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
+import org.bukkit.OfflinePlayer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class VaultConnector implements Economy {
-    private iConomy plugin;
-    private String name;
+    private final iConomy plugin;
 
     public VaultConnector(iConomy plugin) {
         this.plugin = plugin;
@@ -28,8 +25,7 @@ public class VaultConnector implements Economy {
 
     @Override
     public String getName() {
-        name = "iConomy " + plugin.getDescription().getVersion();
-        return name;
+        return "iConomy " + plugin.getDescription().getVersion();
     }
 
     @Override
@@ -97,7 +93,6 @@ public class VaultConnector implements Economy {
 
         double balance;
         EconomyResponse.ResponseType type;
-        String errorMessage = null;
 
         Holdings holdings = iConomy.getAccount(playerName).getHoldings();
         holdings.add(amount);
@@ -106,7 +101,7 @@ public class VaultConnector implements Economy {
 
         iConomy.getTransactions().insert("[Vault]", playerName, 0.0D, balance, 0.0D, amount, 0.0D);
 
-        return new EconomyResponse(amount, balance, type, errorMessage);
+        return new EconomyResponse(amount, balance, type, null);
     }
 
     @Override
@@ -114,7 +109,6 @@ public class VaultConnector implements Economy {
 
         double balance;
         EconomyResponse.ResponseType type;
-        String errorMessage = null;
 
         Holdings holdings = iConomy.getAccount(player.getName()).getHoldings();
         holdings.add(amount);
@@ -123,7 +117,7 @@ public class VaultConnector implements Economy {
 
         iConomy.getTransactions().insert("[Vault]", player.getName(), 0.0D, balance, 0.0D, amount, 0.0D);
 
-        return new EconomyResponse(amount, balance, type, errorMessage);
+        return new EconomyResponse(amount, balance, type, null);
     }
 
     @Override
@@ -131,7 +125,6 @@ public class VaultConnector implements Economy {
 
         double balance;
         EconomyResponse.ResponseType type;
-        String errorMessage = null;
 
         Holdings holdings = iConomy.getAccount(playerName).getHoldings();
         holdings.add(amount);
@@ -140,7 +133,7 @@ public class VaultConnector implements Economy {
 
         iConomy.getTransactions().insert("[Vault]", playerName, 0.0D, balance, 0.0D, amount, 0.0D);
 
-        return new EconomyResponse(amount, balance, type, errorMessage);
+        return new EconomyResponse(amount, balance, type, null);
     }
 
     @Override
@@ -148,7 +141,6 @@ public class VaultConnector implements Economy {
 
         double balance;
         EconomyResponse.ResponseType type;
-        String errorMessage = null;
 
         Holdings holdings = iConomy.getAccount(player.getName()).getHoldings();
         holdings.add(amount);
@@ -157,7 +149,7 @@ public class VaultConnector implements Economy {
 
         iConomy.getTransactions().insert("[Vault]", player.getName(), 0.0D, balance, 0.0D, amount, 0.0D);
 
-        return new EconomyResponse(amount, balance, type, errorMessage);
+        return new EconomyResponse(amount, balance, type, null);
     }
 
     @Override
@@ -198,7 +190,7 @@ public class VaultConnector implements Economy {
     @Override
     public List<String> getBanks() {
 
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     @Override
@@ -260,7 +252,7 @@ public class VaultConnector implements Economy {
 
         double balance;
         EconomyResponse.ResponseType type;
-        String errorMessage = null;
+        String errorMessage;
 
         Holdings holdings = iConomy.getAccount(playerName).getHoldings();
         if (holdings.hasEnough(amount)) {
@@ -270,7 +262,7 @@ public class VaultConnector implements Economy {
 
             iConomy.getTransactions().insert(playerName, "[Vault]", 0.0D, balance, 0.0D, 0.0D, amount);
 
-            return new EconomyResponse(amount, balance, type, errorMessage);
+            return new EconomyResponse(amount, balance, type, null);
         } else {
             amount = 0;
             balance = getBalance(playerName);
@@ -285,7 +277,7 @@ public class VaultConnector implements Economy {
 
         double balance;
         EconomyResponse.ResponseType type;
-        String errorMessage = null;
+        String errorMessage;
 
         Holdings holdings = iConomy.getAccount(player.getName()).getHoldings();
         if (holdings.hasEnough(amount)) {
@@ -295,7 +287,7 @@ public class VaultConnector implements Economy {
 
             iConomy.getTransactions().insert(player.getName(), "[Vault]", 0.0D, balance, 0.0D, 0.0D, amount);
 
-            return new EconomyResponse(amount, balance, type, errorMessage);
+            return new EconomyResponse(amount, balance, type, null);
         } else {
             amount = 0;
             balance = getBalance(player.getName());
@@ -310,7 +302,7 @@ public class VaultConnector implements Economy {
 
         double balance;
         EconomyResponse.ResponseType type;
-        String errorMessage = null;
+        String errorMessage;
 
         Holdings holdings = iConomy.getAccount(playerName).getHoldings();
         if (holdings.hasEnough(amount)) {
@@ -320,7 +312,7 @@ public class VaultConnector implements Economy {
 
             iConomy.getTransactions().insert(playerName, "[Vault]", 0.0D, balance, 0.0D, 0.0D, amount);
 
-            return new EconomyResponse(amount, balance, type, errorMessage);
+            return new EconomyResponse(amount, balance, type, null);
         } else {
             amount = 0;
             balance = getBalance(playerName);
@@ -335,7 +327,7 @@ public class VaultConnector implements Economy {
 
         double balance;
         EconomyResponse.ResponseType type;
-        String errorMessage = null;
+        String errorMessage;
 
         Holdings holdings = iConomy.getAccount(player.getName()).getHoldings();
         if (holdings.hasEnough(amount)) {
@@ -345,7 +337,7 @@ public class VaultConnector implements Economy {
 
             iConomy.getTransactions().insert(player.getName(), "[Vault]", 0.0D, balance, 0.0D, 0.0D, amount);
 
-            return new EconomyResponse(amount, balance, type, errorMessage);
+            return new EconomyResponse(amount, balance, type, null);
         } else {
             amount = 0;
             balance = getBalance(player.getName());

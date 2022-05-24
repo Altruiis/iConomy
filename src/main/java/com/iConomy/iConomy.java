@@ -1,5 +1,31 @@
 package com.iConomy;
 
+import com.iConomy.entity.Players;
+import com.iConomy.net.Database;
+import com.iConomy.system.Account;
+import com.iConomy.system.Accounts;
+import com.iConomy.system.Bank;
+import com.iConomy.system.Banks;
+import com.iConomy.system.Interest;
+import com.iConomy.system.Transactions;
+import com.iConomy.util.Constants;
+import com.iConomy.util.FileManager;
+import com.iConomy.util.Messaging;
+import com.iConomy.util.Misc;
+import com.iConomy.util.VaultConnector;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
+import org.bukkit.plugin.ServicesManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,34 +41,6 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.logging.Logger;
-
-import org.bukkit.Server;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.ServicesManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import com.iConomy.entity.Players;
-import com.iConomy.net.Database;
-import com.iConomy.system.Account;
-import com.iConomy.system.Accounts;
-import com.iConomy.system.Bank;
-import com.iConomy.system.Banks;
-import com.iConomy.system.Interest;
-import com.iConomy.system.Transactions;
-import com.iConomy.util.Constants;
-import com.iConomy.util.FileManager;
-import com.iConomy.util.Messaging;
-import com.iConomy.util.Misc;
-import com.iConomy.util.VaultConnector;
-
-import net.milkbowl.vault.economy.Economy;
 
 /**
  * iConomy by Team iCo
@@ -70,7 +68,7 @@ public class iConomy extends JavaPlugin {
     public static Banks Banks = null;
     public static Accounts Accounts = null;
 
-    private static Server Server = null;
+    //private static Server Server = null;
     private static Database Database = null;
     private static Transactions Transactions = null;
 
@@ -87,9 +85,6 @@ public class iConomy extends JavaPlugin {
 
         instance = this;
         Locale.setDefault(Locale.US);
-
-        // Get the server
-        Server = getServer();
 
         // Plugin Directory
         getDataFolder().mkdir();
@@ -112,7 +107,7 @@ public class iConomy extends JavaPlugin {
         try {
             Constants.load(new File(getDataFolder(), "Config.yml"));
         } catch (Exception e) {
-            Server.getPluginManager().disablePlugin(this);
+            getServer().getPluginManager().disablePlugin(this);
             log.warning("Failed to retrieve configuration from directory.");
             log.info("Please back up your current settings and let iConomy recreate it.");
             return;
@@ -135,7 +130,7 @@ public class iConomy extends JavaPlugin {
             }
         } catch (Exception e) {
             log.severe("Database initialization failed: " + e);
-            Server.getPluginManager().disablePlugin(this);
+            getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
@@ -166,7 +161,7 @@ public class iConomy extends JavaPlugin {
             }
         } catch (Exception e) {
             log.severe("Failed to start interest system: " + e);
-            Server.getPluginManager().disablePlugin(this);
+            getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
@@ -188,8 +183,8 @@ public class iConomy extends JavaPlugin {
      */
     private boolean registerEconomy() {
 
-        if (Server.getPluginManager().isPluginEnabled("Vault")) {
-            final ServicesManager sm = Server.getServicesManager();
+        if (getServer().getPluginManager().isPluginEnabled("Vault")) {
+            final ServicesManager sm = getServer().getServicesManager();
             sm.register(Economy.class, new VaultConnector(this), this, ServicePriority.Highest);
             log.info("Registered Vault interface.");
 
@@ -222,7 +217,6 @@ public class iConomy extends JavaPlugin {
                 Interest_Timer.cancel();
             }
 
-            Server = null;
             Banks = null;
             Accounts = null;
             Database = null;
@@ -241,15 +235,18 @@ public class iConomy extends JavaPlugin {
 
         switch (commandLabel.toLowerCase()) {
 
+            case "iconomy:bank":
             case "bank":
                 if (!Constants.Banking) {
                     Messaging.send(sender, "`rBanking is disabled.");
                     return true;
                 }
 
+            case "iconomy:money":
             case "money":    // Allow bank to fall through to this case.
                 return playerListener.onPlayerCommand(sender, split);
 
+            case "iconomy:icoimport":
             case "icoimport":
                 if (!isPlayer && !importEssEco()) {
                     Messaging.send(sender, "`rImport failed.");
@@ -680,12 +677,4 @@ public class iConomy extends JavaPlugin {
         return true;
     }
 
-    /**
-     * Grab the server so we can do various activities if needed.
-     *
-     * @return Server
-     */
-    public static Server getBukkitServer() {
-        return Server;
-    }
 }

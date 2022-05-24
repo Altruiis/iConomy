@@ -2,13 +2,13 @@ package com.iConomy.system;
 
 import com.iConomy.iConomy;
 import com.iConomy.util.Constants;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Transactions {
-	
+
     public void insert(String from, String to, double from_balance, double to_balance, double set, double gain, double loss) {
         if (!Constants.Logging) {
             return;
@@ -16,10 +16,9 @@ public class Transactions {
         int i = 1;
         long timestamp = System.currentTimeMillis() / 1000L;
 
-        Object[] data = { from, to, Double.valueOf(from_balance), Double.valueOf(to_balance), Long.valueOf(timestamp), Double.valueOf(set), Double.valueOf(gain), Double.valueOf(loss) };
+        Object[] data = {from, to, from_balance, to_balance, timestamp, set, gain, loss};
 
         Connection conn = null;
-        ResultSet rs = null;
         PreparedStatement ps = null;
         try {
             conn = iConomy.getiCoDatabase().getConnection();
@@ -31,13 +30,14 @@ public class Transactions {
             }
 
             ps.executeUpdate();
-        } catch (SQLException ex) {} finally {
+        } catch (SQLException ignored) {
+        } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
-            
-            if (rs != null)
-                try { rs.close(); } catch (SQLException ex) {}
-            
+                try {
+                    ps.close();
+                } catch (SQLException ignored) {
+                }
+
             iConomy.getiCoDatabase().close(conn);
         }
     }

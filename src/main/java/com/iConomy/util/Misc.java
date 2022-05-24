@@ -1,22 +1,20 @@
 package com.iConomy.util;
 
 import com.iConomy.iConomy;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.List;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 public class Misc {
-	
-	/**
+
+    /**
      * Checks text against two variables, if it equals at least one returns true.
      *
      * @param text The text that we were provided with.
-     * @param against The first variable that needs to be checked against
-     * @param or The second variable that it could possibly be.
-     *
+     * @param is   The first variable that needs to be checked against
      * @return <code>Boolean</code> - True or false based on text.
      */
     public static boolean is(String text, String[] is) {
@@ -29,21 +27,15 @@ public class Misc {
     }
 
     public static boolean isSelf(CommandSender sender, String name) {
-        return ((Player) sender).getName().equalsIgnoreCase(name);
+        return sender.getName().equalsIgnoreCase(name);
     }
 
     public static int plural(Double amount) {
-        if (amount.doubleValue() != 1.0D || amount.doubleValue() != -1.0D) {
-            return 1;
-        }
-        return 0;
+        return 1;
     }
 
     public static int plural(Integer amount) {
-        if (amount.intValue() != 1 || amount.intValue() != -1) {
-            return 1;
-        }
-        return 0;
+        return 1;
     }
 
     public static String BankCurrency(int which, String denom) {
@@ -53,19 +45,19 @@ public class Misc {
     }
 
     public static String formatted(String amount, List<String> maj, List<String> min) {
-        String formatted = "";
+        String formatted;
         String famount = amount.replace(",", "");
 
         if (Constants.FormatMinor) {
-            String[] pieces = null;
-            String[] fpieces = null;
+            String[] pieces;
+            String[] fpieces;
 
             if (amount.contains(".")) {
                 pieces = amount.split("\\.");
-                fpieces = new String[] { pieces[0].replace(",", ""), pieces[1] };
+                fpieces = new String[]{pieces[0].replace(",", ""), pieces[1]};
             } else {
-                pieces = new String[] { amount, "0" };
-                fpieces = new String[] { amount.replace(",", ""), "0" };
+                pieces = new String[]{amount, "0"};
+                fpieces = new String[]{amount.replace(",", ""), "0"};
             }
 
             if (Constants.FormatSeperated) {
@@ -73,20 +65,20 @@ public class Misc {
                 String minor = min.get(plural(Integer.valueOf(fpieces[1])));
 
                 if (pieces[1].startsWith("0") && !pieces[1].equals("0"))
-                    pieces[1] = pieces[1].substring(1, pieces[1].length());
+                    pieces[1] = pieces[1].substring(1);
                 if (pieces[0].startsWith("0") && !pieces[0].equals("0"))
-                    pieces[0] = pieces[0].substring(1, pieces[0].length());
+                    pieces[0] = pieces[0].substring(1);
 
-                if (Integer.valueOf(fpieces[1]).intValue() != 0 && Integer.valueOf(fpieces[0]).intValue() != 0)
+                if (Integer.parseInt(fpieces[1]) != 0 && Integer.parseInt(fpieces[0]) != 0)
                     formatted = pieces[0] + " " + major + ", " + pieces[1] + " " + minor;
-                else if (Integer.valueOf(fpieces[0]).intValue() != 0)
+                else if (Integer.parseInt(fpieces[0]) != 0)
                     formatted = pieces[0] + " " + major;
                 else
                     formatted = pieces[1] + " " + minor;
             } else {
-                String currency = "";
+                String currency;
 
-                if (Double.valueOf(famount).doubleValue() < 1.0D || Double.valueOf(famount).doubleValue() > -1.0D)
+                if (Double.parseDouble(famount) < 1.0D || Double.parseDouble(famount) > -1.0D)
                     currency = min.get(plural(Integer.valueOf(fpieces[1])));
                 else {
                     currency = maj.get(1);
@@ -108,7 +100,7 @@ public class Misc {
      * Get the player from the server (matched)
      */
     public static Player playerMatch(String name) {
-        Collection<? extends Player> online = iConomy.getBukkitServer().getOnlinePlayers();
+        Collection<? extends Player> online = Bukkit.getServer().getOnlinePlayers();
         Player lastPlayer = null;
 
         for (Player player : online) {
@@ -119,7 +111,7 @@ public class Misc {
                 break;
             }
 
-            if (playerName.toLowerCase().indexOf(name.toLowerCase()) != -1) {
+            if (playerName.toLowerCase().contains(name.toLowerCase())) {
                 if (lastPlayer != null) {
                     return null;
                 }

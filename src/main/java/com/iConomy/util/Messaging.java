@@ -1,6 +1,7 @@
 package com.iConomy.util;
 
 import com.iConomy.iConomy;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,7 +20,7 @@ import org.bukkit.entity.Player;
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <<a href="http://www.gnu.org/licenses/">...</a>>.
  */
 public class Messaging {
 	
@@ -59,7 +60,7 @@ public class Messaging {
      */
     public static String parse(String original) {
         original = colorize(original);
-        return original.replaceAll("(&([a-z0-9]))", "�$2").replace("&&", "&");
+        return original.replaceAll("(&([a-z\\d]))", "�$2").replace("&&", "&");
     }
 
     /**
@@ -142,7 +143,7 @@ public class Messaging {
      * @param message - The message to be sent.
      */
     public static void broadcast(String message) {
-        for (Player p : iConomy.getBukkitServer().getOnlinePlayers())
+        for (Player p : Bukkit.getServer().getOnlinePlayers())
             p.sendMessage(parse(message));
     }
 }

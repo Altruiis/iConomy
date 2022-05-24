@@ -4,8 +4,8 @@ import com.iConomy.iConomy;
 import com.iConomy.util.Constants;
 import com.iConomy.util.Messaging;
 import com.iConomy.util.Template;
+import org.bukkit.entity.Player;
 
-import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,10 +18,8 @@ import java.util.List;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
-import org.bukkit.entity.Player;
-
 public class Interest extends TimerTask {
-    Template Template = null;
+    Template Template;
     Logger log = iConomy.instance.getLogger();
 
     public Interest(String directory) {
@@ -34,11 +32,11 @@ public class Interest extends TimerTask {
         ResultSet rs = null;
 
         DecimalFormat DecimalFormat = new DecimalFormat("#.##");
-        List<String> players = new ArrayList<String>();
-        HashMap<String, Integer> bankPlayers = new HashMap<String, Integer>();
+        List<String> players = new ArrayList<>();
+        HashMap<String, Integer> bankPlayers = new HashMap<>();
 
         if (Constants.InterestOnline) {
-        	/*
+            /*
              * Select all Online Players
              */
             Collection<? extends Player> player = iConomy.getBukkitServer().getOnlinePlayers();
@@ -52,13 +50,13 @@ public class Interest extends TimerTask {
 
                     if (account != null)
                         for (BankAccount baccount : account.getBankAccounts())
-                            bankPlayers.put(p.getName(), Integer.valueOf(baccount.getBankId()));
+                            bankPlayers.put(p.getName(), baccount.getBankId());
                 }
             }
         } else {
-        	/*
-        	 * Select ALL players.
-        	 */
+            /*
+             * Select ALL players.
+             */
             conn = iConomy.getiCoDatabase().getConnection();
             try {
                 if (Constants.InterestType.equalsIgnoreCase("players") || !Constants.Banking)
@@ -74,22 +72,20 @@ public class Interest extends TimerTask {
                         players.add(rs.getString("username"));
                         continue;
                     }
-                    bankPlayers.put(rs.getString("account_name"), Integer.valueOf(rs.getInt("bank_id")));
+                    bankPlayers.put(rs.getString("account_name"), rs.getInt("bank_id"));
                 }
             } catch (Exception E) {
                 log.warning("Error executing query for interest: " + E.getMessage());
             } finally {
                 if (conn != null) {
-                	try {
-						conn.close();
-					} catch (SQLException e) {}
+                    try {
+                        conn.close();
+                    } catch (SQLException ignored) {
+                    }
                     conn = null;
                 }
                 if (ps != null) {
                     ps = null;
-                }
-                if (rs != null) {
-                    rs = null;
                 }
             }
         }
@@ -100,13 +96,13 @@ public class Interest extends TimerTask {
         if (Constants.InterestPercentage != 0.0D) {
             percentage = true;
         } else {
-            Double min = Double.valueOf(Constants.InterestMin);
-            Double max = Double.valueOf(Constants.InterestMax);
+            double min = Constants.InterestMin;
+            double max = Constants.InterestMax;
             try {
                 if (min != max)
-                    amount = Double.valueOf(DecimalFormat.format(Math.random() * (max.doubleValue() - min.doubleValue()) + min.doubleValue())).doubleValue();
+                    amount = Double.parseDouble(DecimalFormat.format(Math.random() * (max - min) + min));
                 else
-                    amount = max.doubleValue();
+                    amount = max;
             } catch (NumberFormatException e) {
                 log.warning("Invalid Interest: " + e);
             }
@@ -127,9 +123,8 @@ public class Interest extends TimerTask {
 
                         if (holdings != null) {
                             double balance = holdings.balance();
-                            double original = balance;
 
-                            if (cutoff > 0.0D ? original >= cutoff : cutoff < 0.0D && original <= cutoff) {
+                            if (cutoff > 0.0D ? balance >= cutoff : cutoff < 0.0D && balance <= cutoff) {
                                 continue;
                             }
 
@@ -142,15 +137,15 @@ public class Interest extends TimerTask {
                             ps.addBatch();
 
                             if (Constants.InterestAnn) {
-                            	Player player = iConomy.getBukkitServer().getPlayer(name);
-                            	if (player != null)
-                            		Messaging.send(player, this.Template.parse("interest.announcement", new String[] { "+amount,+money,+interest,+a,+m,+i" }, new Object[] { iConomy.format(amount) }));
+                                Player player = iConomy.getBukkitServer().getPlayer(name);
+                                if (player != null)
+                                    Messaging.send(player, this.Template.parse("interest.announcement", new String[]{"+amount,+money,+interest,+a,+m,+i"}, new Object[]{iConomy.format(amount)}));
                             }
 
                             if (amount < 0.0D)
-                                iConomy.getTransactions().insert("[System Interest]", name, 0.0D, original, 0.0D, 0.0D, amount);
+                                iConomy.getTransactions().insert("[System Interest]", name, 0.0D, balance, 0.0D, 0.0D, amount);
                             else
-                                iConomy.getTransactions().insert("[System Interest]", name, 0.0D, original, 0.0D, amount, 0.0D);
+                                iConomy.getTransactions().insert("[System Interest]", name, 0.0D, balance, 0.0D, amount, 0.0D);
                         }
                     }
                 }
@@ -162,13 +157,12 @@ public class Interest extends TimerTask {
                     Account account = iConomy.getAccount(name);
 
                     if (account != null) {
-                        Holdings holdings = account.getBankHoldings(bankPlayers.get(name).intValue());
+                        Holdings holdings = account.getBankHoldings(bankPlayers.get(name));
 
                         if (holdings != null) {
                             double balance = holdings.balance();
-                            double original = balance;
 
-                            if (cutoff > 0.0D ? original >= cutoff : cutoff < 0.0D && original <= cutoff) {
+                            if (cutoff > 0.0D ? balance >= cutoff : cutoff < 0.0D && balance <= cutoff) {
                                 continue;
                             }
 
@@ -178,19 +172,19 @@ public class Interest extends TimerTask {
 
                             ps.setDouble(1, balance + amount);
                             ps.setString(2, name);
-                            ps.setInt(3, bankPlayers.get(name).intValue());
+                            ps.setInt(3, bankPlayers.get(name));
                             ps.addBatch();
 
                             if (Constants.InterestAnn && Constants.InterestOnline) {
-                            	Player player = iConomy.getBukkitServer().getPlayer(name);
-                            	if (player != null)
-                            		Messaging.send(player, this.Template.parse("interest.announcement", new String[] { "+amount,+money,+interest,+a,+m,+i" }, new Object[] { iConomy.format(amount) }));
+                                Player player = iConomy.getBukkitServer().getPlayer(name);
+                                if (player != null)
+                                    Messaging.send(player, this.Template.parse("interest.announcement", new String[]{"+amount,+money,+interest,+a,+m,+i"}, new Object[]{iConomy.format(amount)}));
                             }
 
                             if (amount < 0.0D)
-                                iConomy.getTransactions().insert("[System Interest]", name, 0.0D, original, 0.0D, 0.0D, amount);
+                                iConomy.getTransactions().insert("[System Interest]", name, 0.0D, balance, 0.0D, 0.0D, amount);
                             else {
-                                iConomy.getTransactions().insert("[System Interest]", name, 0.0D, original, 0.0D, amount, 0.0D);
+                                iConomy.getTransactions().insert("[System Interest]", name, 0.0D, balance, 0.0D, amount, 0.0D);
                             }
                         }
                     }
@@ -203,15 +197,14 @@ public class Interest extends TimerTask {
             conn.commit();
 
             ps.clearBatch();
-        } catch (BatchUpdateException ex) {
-            log.warning(ex.getMessage());
         } catch (SQLException ex) {
             log.warning(ex.getMessage());
         } finally {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 iConomy.getiCoDatabase().close(conn);
         }

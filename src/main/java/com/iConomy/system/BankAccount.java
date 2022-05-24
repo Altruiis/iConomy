@@ -2,13 +2,14 @@ package com.iConomy.system;
 
 import com.iConomy.iConomy;
 import com.iConomy.util.Constants;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class BankAccount {
-    private String BankName;
-    private int BankId;
+    private final String BankName;
+    private final int BankId;
     private String AccountName;
 
     public BankAccount(String BankName, int BankId, String AccountName) {
@@ -42,17 +43,18 @@ public class BankAccount {
             ps.setInt(1, this.BankId);
             ps.setString(2, this.AccountName);
             ps.executeUpdate();
-        } catch (Exception e) {
-            return;
+        } catch (Exception ignored) {
         } finally {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
     }
 }

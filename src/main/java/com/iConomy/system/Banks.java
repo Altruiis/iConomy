@@ -2,6 +2,7 @@ package com.iConomy.system;
 
 import com.iConomy.iConomy;
 import com.iConomy.util.Constants;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +22,7 @@ public class Banks {
         Connection conn = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
-        boolean exists = false;
+        boolean exists;
 
         try {
             conn = iConomy.getiCoDatabase().getConnection();
@@ -35,15 +36,18 @@ public class Banks {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
 
         return exists;
@@ -57,7 +61,7 @@ public class Banks {
         Connection conn = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
-        boolean exists = false;
+        boolean exists;
 
         try {
             conn = iConomy.getiCoDatabase().getConnection();
@@ -71,15 +75,18 @@ public class Banks {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
 
         return exists;
@@ -123,11 +130,13 @@ public class Banks {
                 if (ps != null)
                     try {
                         ps.close();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ignored) {
+                    }
                 if (conn != null)
                     try {
                         conn.close();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ignored) {
+                    }
             }
         }
 
@@ -159,11 +168,13 @@ public class Banks {
                 if (ps != null)
                     try {
                         ps.close();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ignored) {
+                    }
                 if (conn != null)
                     try {
                         conn.close();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ignored) {
+                    }
             }
         }
 
@@ -176,7 +187,7 @@ public class Banks {
         }
 
         Connection conn = null;
-        ResultSet rs = null;
+        ResultSet rs;
         PreparedStatement ps = null;
         int count = -1;
 
@@ -193,11 +204,13 @@ public class Banks {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
 
         return count;
@@ -209,7 +222,7 @@ public class Banks {
         }
 
         Connection conn = null;
-        ResultSet rs = null;
+        ResultSet rs;
         PreparedStatement ps = null;
         int count = -1;
         try {
@@ -226,11 +239,13 @@ public class Banks {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
 
         return count;
@@ -242,7 +257,7 @@ public class Banks {
         }
 
         Connection conn = null;
-        ResultSet rs = null;
+        ResultSet rs;
         PreparedStatement ps = null;
 
         try {
@@ -268,11 +283,13 @@ public class Banks {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
         return true;
     }
@@ -313,11 +330,13 @@ public class Banks {
                 if (ps != null)
                     try {
                         ps.close();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ignored) {
+                    }
                 if (conn != null)
                     try {
                         conn.close();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ignored) {
+                    }
             }
             return true;
         }
@@ -355,27 +374,29 @@ public class Banks {
         }
 
         Connection conn = null;
-        ResultSet rs = null;
+        ResultSet rs;
         PreparedStatement ps = null;
-        List<Double> Values = new ArrayList<Double>();
+        List<Double> Values = new ArrayList<>();
         try {
             conn = iConomy.getiCoDatabase().getConnection();
             ps = conn.prepareStatement("SELECT holdings FROM " + Constants.SQLTable + "_BankRelations");
             rs = ps.executeQuery();
 
             while (rs.next())
-                Values.add(Double.valueOf(rs.getDouble("holdings")));
+                Values.add(rs.getDouble("holdings"));
         } catch (Exception e) {
             return null;
         } finally {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
 
         return Values;

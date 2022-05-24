@@ -16,7 +16,7 @@ import com.iConomy.util.Constants;
 public class AccountSetEvent extends Event {
 
 	private final Holdings account;
-	private double balance;
+	private final double balance;
 	private static final HandlerList handlers = new HandlerList();
 
 	Logger log = iConomy.instance.getLogger();
@@ -89,11 +89,11 @@ public class AccountSetEvent extends Event {
 			if (ps != null)
 				try {
 					ps.close();
-				} catch (SQLException ex) {}
+				} catch (SQLException ignored) {}
 			if (conn != null)
 				try {
 					conn.close();
-				} catch (SQLException ex) {}
+				} catch (SQLException ignored) {}
 		}
 	}
 }

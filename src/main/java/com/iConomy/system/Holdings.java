@@ -23,7 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class Holdings {
 	
-    private String name = "";
+    private final String name;
     private boolean bank = false;
     private int bankId = 0;
     Logger log = iConomy.instance.getLogger();
@@ -83,7 +83,7 @@ public class Holdings {
         Connection conn = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
-        Double balance = Double.valueOf(Constants.Holdings);
+        double balance = Constants.Holdings;
         try {
             conn = iConomy.getiCoDatabase().getConnection();
 
@@ -99,20 +99,20 @@ public class Holdings {
             rs = ps.executeQuery();
 
             if (rs.next())
-                balance = Double.valueOf(this.bankId == 0 ? rs.getDouble("balance") : rs.getDouble("holdings"));
+                balance = this.bankId == 0 ? rs.getDouble("balance") : rs.getDouble("holdings");
         } catch (Exception ex) {
             log.warning("Failed to grab holdings: " + ex);
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
+                try { ps.close(); } catch (SQLException ignored) {}
             
             if (rs != null)
-                try { rs.close(); } catch (SQLException ex) {}
+                try { rs.close(); } catch (SQLException ignored) {}
             
             if (conn != null)
-                try { conn.close(); } catch (SQLException ex) {}
+                try { conn.close(); } catch (SQLException ignored) {}
         }
-        return balance.doubleValue();
+        return balance;
     }
 
     public void set(double balance) {
@@ -220,7 +220,7 @@ public class Holdings {
 
     public String toString() {
         DecimalFormat formatter = new DecimalFormat("#,##0.00");
-        Double balance = Double.valueOf(get());
+        Double balance = get();
         String formatted = formatter.format(balance);
 
         if (formatted.endsWith(".")) {

@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
+import java.nio.file.Files;
 
 import org.bukkit.Bukkit;
 
@@ -20,7 +21,6 @@ public class Downloader {
     protected int itemCount;
     protected int itemTotal;
     protected long lastModified;
-    protected String error;
 
     public void install(String location, String filename) {
         File dest = new File("lib" + File.separator + filename);
@@ -50,10 +50,9 @@ public class Downloader {
         }
 
         InputStream in = connection.getInputStream();
-        OutputStream out = new FileOutputStream(destination);
+        OutputStream out = Files.newOutputStream(destination.toPath());
 
         byte[] buffer = new byte[65536];
-        Integer currentCount = 0;
 
         while (true) {
             int count = in.read(buffer);
@@ -62,7 +61,6 @@ public class Downloader {
                 break;
             }
             out.write(buffer, 0, count);
-            currentCount += count;
         }
 
         in.close();
@@ -81,7 +79,7 @@ public class Downloader {
         try {
             Method method = sysclass.getDeclaredMethod("addURL", parameters);
             method.setAccessible(true);
-            method.invoke(sysloader, new Object[] { u });
+            method.invoke(sysloader, u);
             
         } catch (Throwable t) {
             t.printStackTrace();

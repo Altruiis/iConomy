@@ -1,17 +1,16 @@
 package com.iConomy.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.logging.Logger;
-
 import com.iConomy.iConomy;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.logging.Logger;
+
 public class Template {
-    private YamlConfiguration tpl = null;
+    private final YamlConfiguration tpl;
 
     File file = null;
     Logger log = iConomy.instance.getLogger();
@@ -22,18 +21,14 @@ public class Template {
             file = new File(directory, filename);
             this.tpl.load(file);
             upgrade(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidConfigurationException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
 
     }
 
     public void upgrade(File file) throws IOException {
-        LinkedHashMap<String, String> nodes = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> nodes = new LinkedHashMap<>();
 
         if (this.tpl.getString("error.bank.exists") == null) {
             nodes.put("tag.money", "<green>[<white>Money<green>] ");
@@ -46,7 +41,6 @@ public class Template {
             nodes.put("error.bank.exists", "<rose>Sorry, that bank already exists.");
             nodes.put("error.bank.doesnt", "<rose>Sorry, that bank doesn't exist.");
             nodes.put("error.bank.couldnt", "<rose>Sorry, bank <white>+name <rose>couldn't be created.");
-            nodes.put("error.bank.account.none", "<rose>Sorry, you do not have any bank accounts.");
             nodes.put("error.bank.account.exists", "<rose>Sorry, an account like that already exists with us.");
             nodes.put("error.bank.account.doesnt", "<rose>Sorry, you do not have an account with <white>+name<rose>.");
             nodes.put("error.bank.account.maxed", "<rose>Sorry, you already have a bank account.");
@@ -103,7 +97,6 @@ public class Template {
      * Grab the raw template line by the key, and don't save anything.
      *
      * @param key The template key we wish to grab.
-     *
      * @return <code>String</code> - Template line / string.
      */
     public String raw(String key) {
@@ -113,10 +106,8 @@ public class Template {
     /**
      * Grab the raw template line and save data if no key existed.
      *
-     * @param key The template key we are searching for.
+     * @param key  The template key we are searching for.
      * @param line The line to be placed if no key was found.
-     * 
-     * @return
      */
     public String raw(String key, String line) {
         return this.tpl.getString(key, line);

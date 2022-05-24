@@ -33,7 +33,7 @@ public class Accounts {
         Connection conn = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
-        boolean exists = false;
+        boolean exists;
         try {
             conn = iConomy.getiCoDatabase().getConnection();
             ps = conn.prepareStatement("SELECT * FROM " + Constants.SQLTable + " WHERE username = ? LIMIT 1");
@@ -44,13 +44,13 @@ public class Accounts {
             exists = false;
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
+                try { ps.close(); } catch (SQLException ignored) {}
             
             if (rs != null)
-                try { rs.close(); } catch (SQLException ex) {}
+                try { rs.close(); } catch (SQLException ignored) {}
             
             if (conn != null)
-                try { conn.close(); } catch (SQLException ex) {}
+                try { conn.close(); } catch (SQLException ignored) {}
         }
         return exists;
     }
@@ -74,10 +74,10 @@ public class Accounts {
             return false;
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
+                try { ps.close(); } catch (SQLException ignored) {}
             
             if (conn != null)
-                try { conn.close(); } catch (SQLException ex) {}
+                try { conn.close(); } catch (SQLException ignored) {}
         }
         return true;
     }
@@ -100,10 +100,10 @@ public class Accounts {
             return false;
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
+                try { ps.close(); } catch (SQLException ignored) {}
             
             if (conn != null)
-                try { conn.close(); } catch (SQLException ex) {}
+                try { conn.close(); } catch (SQLException ignored) {}
         }
         return true;
     }
@@ -132,10 +132,10 @@ public class Accounts {
             return false;
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
+                try { ps.close(); } catch (SQLException ignored) {}
             
             if (conn != null)
-                try { conn.close(); } catch (SQLException ex) {}
+                try { conn.close(); } catch (SQLException ignored) {}
         }
         return true;
     }
@@ -157,10 +157,10 @@ public class Accounts {
             return false;
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
+                try { ps.close(); } catch (SQLException ignored) {}
             
             if (conn != null)
-                try { conn.close(); } catch (SQLException ex) {}
+                try { conn.close(); } catch (SQLException ignored) {}
         }
         return true;
     }
@@ -182,10 +182,10 @@ public class Accounts {
             return false;
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
+                try { ps.close(); } catch (SQLException ignored) {}
             
             if (conn != null)
-                try { conn.close(); } catch (SQLException ex) {}
+                try { conn.close(); } catch (SQLException ignored) {}
         }
         return true;
     }
@@ -197,25 +197,25 @@ public class Accounts {
      */
     public List<Double> values() {
         Connection conn = null;
-        ResultSet rs = null;
+        ResultSet rs;
         PreparedStatement ps = null;
-        List<Double> Values = new ArrayList<Double>();
+        List<Double> Values = new ArrayList<>();
         try {
             conn = iConomy.getiCoDatabase().getConnection();
             ps = conn.prepareStatement("SELECT balance FROM " + Constants.SQLTable);
             rs = ps.executeQuery();
 
             while (rs.next())
-                Values.add(Double.valueOf(rs.getDouble("balance")));
+                Values.add(rs.getDouble("balance"));
             
         } catch (Exception e) {
             return null;
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
+                try { ps.close(); } catch (SQLException ignored) {}
             
             if (conn != null)
-                try { conn.close(); } catch (SQLException ex) {}
+                try { conn.close(); } catch (SQLException ignored) {}
         }
         return Values;
     }
@@ -228,9 +228,9 @@ public class Accounts {
      */
     public LinkedHashMap<String, Double> ranking(int amount) {
         Connection conn = null;
-        ResultSet rs = null;
+        ResultSet rs;
         PreparedStatement ps = null;
-        LinkedHashMap<String, Double> Ranking = new LinkedHashMap<String, Double>();
+        LinkedHashMap<String, Double> Ranking = new LinkedHashMap<>();
         try {
             conn = iConomy.getiCoDatabase().getConnection();
             ps = conn.prepareStatement("SELECT username,balance FROM " + Constants.SQLTable + " WHERE hidden = 0 ORDER BY balance DESC LIMIT ?");
@@ -238,16 +238,16 @@ public class Accounts {
             rs = ps.executeQuery();
 
             while (rs.next())
-                Ranking.put(rs.getString("username"), Double.valueOf(rs.getDouble("balance")));
+                Ranking.put(rs.getString("username"), rs.getDouble("balance"));
         } catch (Exception e) {
             log.warning(e.getMessage());
             return null;
         } finally {
             if (ps != null)
-                try { ps.close(); } catch (SQLException ex) {}
+                try { ps.close(); } catch (SQLException ignored) {}
             
             if (conn != null)
-                try { conn.close(); } catch (SQLException ex) {}
+                try { conn.close(); } catch (SQLException ignored) {}
         }
         return Ranking;
     }

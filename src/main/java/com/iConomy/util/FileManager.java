@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * Easy File Management Class
  *
  * @copyright Copyright AniGaiku LLC (C) 2010-2011
- * @author          Nijikokun <nijikokun@gmail.com>
+ * @author Nijikokun <nijikokun@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,14 +28,14 @@ import java.util.logging.Logger;
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <<a href="http://www.gnu.org/licenses/">...</a>>.
  */
 public final class FileManager {
 	
-    private String directory = "";
-    private String file = "";
+    private String directory;
+    private String file;
     private String source = "";
-    private LinkedList<String> lines = new LinkedList<String>();
+    private final LinkedList<String> lines = new LinkedList<>();
 
     public FileManager(String directory, String file, boolean create) {
         this.directory = directory;
@@ -83,8 +83,8 @@ public final class FileManager {
             createDirectory();
     }
 
-    private void log(Level level, Object message) {
-        Logger.getLogger("FileManager").log(level, null, message);
+    private void log(Object message) {
+        Logger.getLogger("FileManager").log(Level.SEVERE, null, message);
     }
 
     public boolean exists() {
@@ -125,7 +125,7 @@ public final class FileManager {
                 if (new File(directory, file).createNewFile())
                     return true;
             } catch (IOException ex) {
-                log(Level.SEVERE, ex);
+                log(ex);
             }
         }
 
@@ -170,17 +170,15 @@ public final class FileManager {
                     output.newLine();
                 }
             } catch (IOException ex) {
-                log(Level.SEVERE, ex);
+                log(ex);
                 output.close();
                 return false;
             }
 
             output.close();
             return true;
-        } catch (FileNotFoundException ex) {
-            log(Level.SEVERE, ex);
         } catch (IOException ex) {
-            log(Level.SEVERE, ex);
+            log(ex);
         }
 
         return false;
@@ -203,7 +201,7 @@ public final class FileManager {
                 while ((line = input.readLine()) != null)
                     this.lines.add(line);
             } catch (IOException ex) {
-                log(Level.SEVERE, ex);
+                log(ex);
                 input.close();
                 return false;
             }
@@ -211,7 +209,7 @@ public final class FileManager {
             input.close();
             return true;
         } catch (IOException ex) {
-            log(Level.SEVERE, ex);
+            log(ex);
         }
 
         return false;
@@ -245,17 +243,15 @@ public final class FileManager {
                 for (Object line : lines)
                     output.write(String.valueOf(line));
             } catch (IOException ex) {
-                log(Level.SEVERE, ex);
+                log(ex);
                 output.close();
                 return false;
             }
 
             output.close();
             return true;
-        } catch (FileNotFoundException ex) {
-            log(Level.SEVERE, ex);
         } catch (IOException ex) {
-            log(Level.SEVERE, ex);
+            log(ex);
         }
 
         return false;

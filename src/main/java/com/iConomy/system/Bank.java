@@ -2,6 +2,7 @@ package com.iConomy.system;
 
 import com.iConomy.iConomy;
 import com.iConomy.util.Constants;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class Bank {
-    private int id = 0;
+    private final int id;
     private String name = "";
     Logger log = iConomy.instance.getLogger();
 
@@ -28,19 +29,23 @@ public class Bank {
 
             if (rs.next())
                 id = rs.getInt("id");
-        } catch (Exception ex) {} finally {
+        } catch (Exception ignored) {
+        } finally {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
         this.id = id;
         this.name = name;
@@ -60,19 +65,23 @@ public class Bank {
 
             if (rs.next())
                 this.name = rs.getString("name");
-        } catch (Exception ex) {} finally {
+        } catch (Exception ignored) {
+        } finally {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
     }
 
@@ -89,7 +98,7 @@ public class Bank {
         ResultSet rs = null;
         PreparedStatement ps = null;
         List<String> minor = Constants.Minor;
-        String asString = Constants.Minor.get(0) + "," + Constants.Minor.get(1);
+        String asString;
         try {
             conn = iConomy.getiCoDatabase().getConnection();
             ps = conn.prepareStatement("SELECT minor FROM " + Constants.SQLTable + "_Banks WHERE id = ? LIMIT 1");
@@ -103,19 +112,23 @@ public class Bank {
                 minor.set(0, denoms[0]);
                 minor.set(1, denoms[1]);
             }
-        } catch (Exception ex) {} finally {
+        } catch (Exception ignored) {
+        } finally {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ignored) {
+                }
         }
         return minor;
     }
@@ -125,7 +138,7 @@ public class Bank {
         ResultSet rs = null;
         PreparedStatement ps = null;
         List<String> major = Constants.Major;
-        String asString = Constants.Major.get(0) + "," + Constants.Major.get(1);
+        String asString;
         try {
             conn = iConomy.getiCoDatabase().getConnection();
             ps = conn.prepareStatement("SELECT major FROM " + Constants.SQLTable + "_Banks WHERE id = ? LIMIT 1");
@@ -139,19 +152,23 @@ public class Bank {
                 major.set(0, denoms[0]);
                 major.set(1, denoms[1]);
             }
-        } catch (Exception ex) {} finally {
+        } catch (Exception ex) {
+        } finally {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
         return major;
     }
@@ -169,19 +186,23 @@ public class Bank {
 
             if (rs.next())
                 initial = rs.getDouble("initial");
-        } catch (Exception ex) {} finally {
+        } catch (Exception ex) {
+        } finally {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
         return initial;
     }
@@ -199,19 +220,23 @@ public class Bank {
 
             if (rs.next())
                 fee = rs.getDouble("fee");
-        } catch (Exception ex) {} finally {
+        } catch (Exception ex) {
+        } finally {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
         return fee;
     }
@@ -235,11 +260,13 @@ public class Bank {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
     }
 
@@ -261,11 +288,13 @@ public class Bank {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
     }
 
@@ -287,11 +316,13 @@ public class Bank {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
     }
 
@@ -313,11 +344,13 @@ public class Bank {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
     }
 
@@ -338,11 +371,13 @@ public class Bank {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
     }
 
@@ -365,21 +400,24 @@ public class Bank {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (conn != null)
                 try {
                     conn.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
         }
         return exists;
     }
 
     public HashMap<String, Double> getAccounts() {
-        HashMap<String, Double> accounts = new HashMap<String, Double>();
+        HashMap<String, Double> accounts = new HashMap<>();
         Connection conn = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
@@ -397,11 +435,13 @@ public class Bank {
             if (ps != null)
                 try {
                     ps.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             if (rs != null)
                 try {
                     rs.close();
-                } catch (SQLException ex) {}
+                } catch (SQLException ex) {
+                }
             iConomy.getiCoDatabase().close(conn);
         }
 
@@ -433,11 +473,13 @@ public class Bank {
                 if (ps != null)
                     try {
                         ps.close();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ex) {
+                    }
                 if (conn != null)
                     try {
                         conn.close();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ex) {
+                    }
             }
             return true;
         }
@@ -463,11 +505,13 @@ public class Bank {
                 if (ps != null)
                     try {
                         ps.close();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ex) {
+                    }
                 if (conn != null)
                     try {
                         conn.close();
-                    } catch (SQLException ex) {}
+                    } catch (SQLException ex) {
+                    }
             }
             return true;
         }
