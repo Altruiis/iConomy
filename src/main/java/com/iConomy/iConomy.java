@@ -14,7 +14,6 @@ import com.iConomy.util.Messaging;
 import com.iConomy.util.Misc;
 import com.iConomy.util.VaultConnector;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -68,7 +67,6 @@ public class iConomy extends JavaPlugin {
     public static Banks Banks = null;
     public static Accounts Accounts = null;
 
-    //private static Server Server = null;
     private static Database Database = null;
     private static Transactions Transactions = null;
 

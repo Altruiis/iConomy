@@ -1,6 +1,5 @@
 package com.iConomy.util;
 
-import com.iConomy.iConomy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -84,13 +83,13 @@ public class Misc {
                     currency = maj.get(1);
                 }
 
-                formatted = amount + " " + currency;
+                formatted = currency + amount;
             }
         } else {
             int plural = plural(Double.valueOf(famount));
             String currency = maj.get(plural);
 
-            formatted = amount + " " + currency;
+            formatted = currency + amount;
         }
 
         return formatted;
